@@ -165,4 +165,5 @@ dependencies:
   - conda
   - conda-self
   - pytest
+  - pylint
 prefix: /Users/hank/miniconda3/envs/inflammation
