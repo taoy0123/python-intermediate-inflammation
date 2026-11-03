@@ -36,6 +36,10 @@ jobs:
         with:
           environment-file: environment.yml
           activate-environment: inflammation
+          miniforge-version: latest
+          channels: conda-forge
+          channel-priority: strict
+          conda-remove-defaults: true
           auto-activate-base: false
           use-only-tar-bz2: true            # needed for the cache to work properly
 
