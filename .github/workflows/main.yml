@@ -1,0 +1,49 @@
+name: CI
+
+# We can specify which Github events will trigger a CI build.
+on: push
+
+# now define a single job 'build' (but could define more)
+jobs:
+
+  build:
+
+    # we can specify the OS to run tests on
+    runs-on: ubuntu-latest
+    # needed so conda activation works in each step
+    defaults:
+      run:
+        shell: bash -el {0}
+
+    # a job is a sequence of steps
+    steps:
+
+      # Next we need to checkout our repository and set up Python.
+      # A 'name' is just a label for the step, and 'uses' specifies an action to run.
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Cache conda packages         # restore the cache BEFORE conda downloads anything
+        uses: actions/cache@v4
+        env:
+          CACHE_NUMBER: 0                  # bump to 1, 2, ... to force a fresh cache
+        with:
+          path: ~/conda_pkgs_dir
+          key: conda-${{ runner.os }}-${{ env.CACHE_NUMBER }}-${{ hashFiles('environment.yml') }}
+
+      - name: Set up conda environment
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          environment-file: environment.yml
+          activate-environment: inflammation
+          auto-activate-base: false
+          use-only-tar-bz2: true            # needed for the cache to work properly
+
+      - name: Check environment
+        run: |
+          conda info
+          conda list
+      
+      - name: Run tests
+        run: |
+          pytest -m --cov=inflammation.models tests/test_models.py
