@@ -39,9 +39,7 @@ jobs:
           miniforge-version: latest
           channels: conda-forge
           channel-priority: strict
-          conda-remove-defaults: true
-          auto-activate-base: false
-          use-only-tar-bz2: true            # needed for the cache to work properly
+          conda-remove-defaults: "true"
 
       - name: Check environment
         run: |
