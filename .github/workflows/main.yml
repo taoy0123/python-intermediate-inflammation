@@ -48,4 +48,4 @@ jobs:
       
       - name: Run tests
         run: |
-          pytest -m --cov=inflammation.models tests/test_models.py
+          python -m pytest --cov=inflammation.models tests/test_models.py
