@@ -8,8 +8,14 @@ jobs:
 
   build:
 
-    # we can specify the OS to run tests on
-    runs-on: ubuntu-latest
+    # Here we add the matrices definition:
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        python-version: ["3.11", "3.12", "3.13"]
+    
+    # Here we add the reference to the os matrix values
+    runs-on: ${{ matrix.os }}
     # needed so conda activation works in each step
     defaults:
       run:
@@ -23,17 +29,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Cache conda packages         # restore the cache BEFORE conda downloads anything
-        uses: actions/cache@v4
-        env:
-          CACHE_NUMBER: 0                  # bump to 1, 2, ... to force a fresh cache
-        with:
-          path: ~/conda_pkgs_dir
-          key: conda-${{ runner.os }}-${{ env.CACHE_NUMBER }}-${{ hashFiles('environment.yml') }}
-
-      - name: Set up conda environment
+      - name: Set up conda environment with Python ${{ matrix.python-version }}
         uses: conda-incubator/setup-miniconda@v3
         with:
+        # Here we add the reference to the python-version matrix values
+          python-version: ${{ matrix.python-version }}
           environment-file: environment.yml
           activate-environment: inflammation
           miniforge-version: latest
