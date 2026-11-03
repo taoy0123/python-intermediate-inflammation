@@ -141,13 +141,13 @@ dependencies:
   - contourpy=1.4.0=py312h20e30b6_0
   - cryptography=50.0.0=py312h482b559_0
   - httpx=0.28.1=py312hca03da5_1
-  - libmamba=2.3.2=hf5d5dc6_5
+  - libmamba
   - numexpr=2.14.2=py312h5fbe615_0
   - pandas=3.0.6=py312h3f644e9_0
   - pydantic-core=2.46.5=py312h46fb4a7_0
   - scipy=1.18.1=py312h079a9ef_0
   - zstandard=0.24.0=py312hbc14757_0
-  - libmambapy=2.3.2=py312h6976e36_5
+  - libmambapy
   - matplotlib-base=3.11.0=py312haa222d5_0
   - pydantic=2.13.5=py312hca03da5_0
   - unearth=0.18.2=py312hca03da5_0
@@ -166,4 +166,5 @@ dependencies:
   - conda-self
   - pytest
   - pylint
+  - pytest-cov
 prefix: /Users/hank/miniconda3/envs/inflammation
