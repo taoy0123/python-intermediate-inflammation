@@ -10,7 +10,7 @@ jobs:
 
     # Here we add the matrices definition:
     strategy:
-      fail-fast: false
+      fail-fast: false # continue running all jobs even if one fails
       matrix:
         os: ["ubuntu-latest", "windows-latest"]
         python-version: ["3.14", "3.15"]
@@ -50,6 +50,7 @@ jobs:
       - name: Run tests
         run: |
           python -m pytest --cov=inflammation.models tests/test_models.py
+      
       - name: Check style with Pylint
         run: |
-          python -m pylint --fail-under=0 --report=y inflammation
+          python -m pylint --report=y inflammation
