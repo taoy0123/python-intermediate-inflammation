@@ -49,7 +49,7 @@ def test_daily_min_string():
         daily_min(test_input)
 
 @pytest.mark.parametrize(
-    "test_input, test_result",
+    "test_input, test_result, expect_raises, error_message",
     [
         ([
             [1, 2, 3],
@@ -60,19 +60,18 @@ def test_daily_min_string():
             [0.33, 0.67, 1],
             [0.67, 0, 1],
             [0.78, 0.89, 1]
-        ]),
-        ([
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0]
             ],
-            [
+            None,
+            None
+        ),
+        (
             [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0]   
-        ]),
+            None,
+            ValueError,
+            'Input data must be a 2D array'   
+        ),
         ([
-            [1, 1, 1],
+            [-1, 1, 1],
             [1, 1, 1],
             [1, 1, 1]
             ],
@@ -80,22 +79,27 @@ def test_daily_min_string():
             [1, 1, 1],
             [1, 1, 1],
             [1, 1, 1]
-        ]),
-        ([
-            [-1, -2, -3],
-            [-4, -5, -6],
-            [-7, 5, -9]
             ],
-            [
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 1, 0]
-        ])
+            ValueError,
+            'Negative values not allowed in input data'
+        ),
+        (
+            "dog",
+            None,
+            TypeError,
+            'Input data must be a Numpy array'
+        )
     ])
-def test_patient_normalise_parametrized(test_input, test_result):
+def test_patient_normalise_parametrized(test_input, test_result, expect_raises, error_message):
     """Test patient normalise function works for input arrays of positive integers.
         Test with a relative and absolute tolerance of 0.01.
     """
-    
-    result = patient_normalise(np.array(test_input))
-    npt.assert_allclose(result, np.array(test_result), rtol=1e-2, atol=1e-2)
+    if isinstance(test_input, list):
+        test_input = np.array(test_input)
+
+    if expect_raises is not None:
+        with pytest.raises(expect_raises, match=error_message):
+            patient_normalise(test_input)
+    else:
+        result = patient_normalise(test_input)
+        npt.assert_allclose(result, np.array(test_result), rtol=1e-2, atol=1e-2)
