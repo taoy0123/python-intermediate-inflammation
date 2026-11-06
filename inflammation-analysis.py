@@ -21,7 +21,19 @@ def main(args):
 
 
     if args.full_data_analysis:
-        analyse_data(os.path.dirname(infiles[0]))
+        _, extension = os.path.splitext(infiles[0])
+        if extension == '.csv':
+            data_source = CSVDataSource(os.path.dirname(infiles[0]))
+        elif extension == '.json':
+            data_source = JSONDataSource(os.path.dirname(infiles[0]))
+        else:
+            raise ValueError("Unsupported file format. Please provide a CSV or JSON file.")
+        result = analyse_data(data_source)
+
+        graph_data = {
+        'standard deviation by day': result,
+        }
+        views.visualize(graph_data)
         return
 
     for filename in infiles:
