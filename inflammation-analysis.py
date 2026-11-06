@@ -5,7 +5,6 @@ import argparse
 import os
 
 from inflammation import models, views
-from inflammation.compute_data import analyse_data
 
 
 def main(args):
@@ -28,7 +27,7 @@ def main(args):
             data_source = JSONDataSource(os.path.dirname(infiles[0]))
         else:
             raise ValueError("Unsupported file format. Please provide a CSV or JSON file.")
-        result = analyse_data(data_source)
+        result = models.analyse_data(data_source)
 
         graph_data = {
         'standard deviation by day': result,
@@ -49,9 +48,11 @@ def main(args):
 
 
 if __name__ == "__main__":
+    # create an argument parser
     parser = argparse.ArgumentParser(
         description='A basic patient inflammation data management system')
 
+    # expect one or more input files to be provided on the command line
     parser.add_argument(
         'infiles',
         nargs='+',
@@ -60,8 +61,10 @@ if __name__ == "__main__":
     parser.add_argument(
         '--full-data-analysis',
         action='store_true',
-        dest='full_data_analysis')
+        dest='full_data_analysis',
+        help='Perform a full data analysis on the provided data files')
 
+    # parse the command line arguments
     args = parser.parse_args()
 
     main(args)
