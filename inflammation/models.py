@@ -33,12 +33,11 @@ def daily_min(data):
     return np.min(data, axis=0)
 
 
-def s_dev(data):
-    """Computes and returns standard deviation for data."""
+def daily_std(data):
+    """Calculate the daily standard deviation of a 2d inflammation data array."""
+    if np.ndim(data) != 2:
+        raise ValueError("Input data must be a 2D array.")
+    
     means = daily_mean(data)
-    devs = []
-    for entry in data:
-        devs.append((entry - mmm) * (entry - mmm))
-
-    s_dev2 = sum(devs) / len(data)
-    return {'standard deviation': s_dev2}
+    
+    return np.std(means, axis=0)
