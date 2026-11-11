@@ -1,7 +1,9 @@
 """Tests for statistics functions within the Model layer."""
 
+import os
 import numpy as np
 import numpy.testing as npt
+import pytest
 
 import pytest
 from inflammation.models import daily_mean, daily_max, daily_min, patient_normalise, compute_standard_deviation, analyse_data, CSVDataSource, JSONDataSource
@@ -138,6 +140,24 @@ def test_analyse_data():
 )
 def test_compute_standard_deviation_parametrized(test_input, test_result):
     """Test compute_standard_deviation function works for input arrays of positive integers."""
-
     result = compute_standard_deviation(test_input)
     npt.assert_array_almost_equal(result, test_result)
+
+@pytest.mark.parametrize('data, expected_standard_deviation, expected_raises, error_message',
+[
+    ([[0, 0, 0]], 0.0, None, None),
+    ([[1.0, 1.0, 1.0]], 0, None, None),
+    ([1, 2, 3], 1.0, ValueError, "Input data must be a 2D array."),
+    ([], 0, ValueError, "Input data must be a 2D array."),
+    ([[1,2,3], [4,5,6]], 0.816496580927726, None, None),
+    ([[-1, -2, -3], [-4, -5, -6]], 0.816496580927726, None, None)
+],
+ids=['all zeros', 'all ones', '1D array', 'empty list', '2D array', 'negative values'])
+def test_daily_standard_deviation(data, expected_standard_deviation, expected_raises, error_message):
+    from inflammation.models import daily_std
+    if expected_raises is None:
+        result_data = daily_std(data)
+        npt.assert_approx_equal(result_data, expected_standard_deviation)
+    else:
+        with pytest.raises(expected_raises, match=error_message):
+            daily_std(data)

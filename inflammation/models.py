@@ -61,6 +61,15 @@ def daily_min(data):
     """
     return np.min(data, axis=0)
 
+
+def daily_std(data):
+    """Calculate the daily standard deviation of a 2d inflammation data array."""
+    if np.ndim(data) != 2:
+        raise ValueError("Input data must be a 2D array.")
+    
+    means = daily_mean(data)
+    
+    return np.std(means, axis=0)
 def patient_normalise(data):
     """
     Normalise patient data from a 2D inflammation data array.
